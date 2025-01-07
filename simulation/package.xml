@@ -13,10 +13,13 @@
   <depend>gazebo_ros</depend>
   <depend>gazebo_msgs</depend>
   <exec_depend>gazebo_plugins</exec_depend>
+  <depend>nav2_costmap_2d</depend>
+  <depend>interactive_markers</depend>
   
   <export>
     <build_type>ament_cmake</build_type>
     <gazebo_ros gazebo_model_path="${prefix}/models"/>
     <gazebo_ros gazebo_media_path="${prefix}/models"/>
+    <costmap_2d plugin="${prefix}/costmap_plugins.xml" />
   </export>
 </package>
