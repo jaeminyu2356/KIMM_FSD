@@ -1,0 +1,7 @@
+<class_libraries>
+    <library path="polygon_costmap_layer">
+        <class type="simulation::PolygonCostmapLayer" base_class_type="nav2_costmap_2d::Layer">
+            <description>Costmap layer that creates obstacles outside of a user-defined polygon</description>
+        </class>
+    </library>
+</class_libraries> 

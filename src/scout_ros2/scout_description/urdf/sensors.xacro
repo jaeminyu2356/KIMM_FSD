@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- LiDAR -->
+    <xacro:macro name="lidar_sensor" params="prefix parent *origin">
+        <joint name="${prefix}_lidar_joint" type="fixed">
+            <xacro:insert_block name="origin"/>
+            <parent link="${parent}"/>
+            <child link="${prefix}_lidar_link"/>
+        </joint>
+
+        <link name="${prefix}_lidar_link">
+            <visual>
+                <geometry>
+                    <cylinder radius="0.03" length="0.05"/>
+                </geometry>
+                <material name="black"/>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder radius="0.03" length="0.05"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <gazebo reference="${prefix}_lidar_link">
+            <sensor type="ray" name="${prefix}_lidar_sensor">
+                <pose>0 0 0 0 0 0</pose>
+                <visualize>false</visualize>
+                <update_rate>10</update_rate>
+                <ray>
+                    <scan>
+                        <horizontal>
+                            <samples>1800</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-3.14159</min_angle>
+                            <max_angle>3.14159</max_angle>
+                        </horizontal>
+                        <vertical>
+                            <samples>16</samples>
+                            <resolution>1</resolution>
+                            <min_angle>-0.261799</min_angle>
+                            <max_angle>0.261799</max_angle>
+                        </vertical>
+                    </scan>
+                    <range>
+                        <min>0.3</min>
+                        <max>100.0</max>
+                        <resolution>0.002</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.03</stddev>
+                    </noise>
+                </ray>
+                <plugin name="gazebo_ros_lidar_controller" filename="libgazebo_ros_ray_sensor.so">
+                    <ros>
+                        <namespace>/scout</namespace>
+                        <remapping>~/out:=velodyne_points</remapping>
+                    </ros>
+                    <output_type>sensor_msgs/PointCloud2</output_type>
+                    <frame_name>${prefix}_lidar_link</frame_name>
+                </plugin>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+
+    <!-- IMU -->
+    <xacro:macro name="imu_sensor" params="prefix parent *origin">
+        <joint name="${prefix}_imu_joint" type="fixed">
+            <xacro:insert_block name="origin"/>
+            <parent link="${parent}"/>
+            <child link="${prefix}_imu_link"/>
+        </joint>
+
+        <link name="${prefix}_imu_link">
+            <visual>
+                <geometry>
+                    <box size="0.02 0.02 0.02"/>
+                </geometry>
+            </visual>
+        </link>
+
+        <gazebo reference="${prefix}_imu_link">
+            <sensor name="${prefix}_imu" type="imu">
+                <always_on>true</always_on>
+                <update_rate>100</update_rate>
+                <imu>
+                    <angular_velocity>
+                        <x>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.01</stddev>
+                                <bias_mean>0.001</bias_mean>
+                                <bias_stddev>0.0001</bias_stddev>
+                            </noise>
+                        </x>
+                        <y>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.01</stddev>
+                                <bias_mean>0.001</bias_mean>
+                                <bias_stddev>0.0001</bias_stddev>
+                            </noise>
+                        </y>
+                        <z>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.01</stddev>
+                                <bias_mean>0.001</bias_mean>
+                                <bias_stddev>0.0001</bias_stddev>
+                            </noise>
+                        </z>
+                    </angular_velocity>
+                    <linear_acceleration>
+                        <x>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.01</stddev>
+                                <bias_mean>0.001</bias_mean>
+                                <bias_stddev>0.0001</bias_stddev>
+                            </noise>
+                        </x>
+                        <y>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.01</stddev>
+                                <bias_mean>0.001</bias_mean>
+                                <bias_stddev>0.0001</bias_stddev>
+                            </noise>
+                        </y>
+                        <z>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.01</stddev>
+                                <bias_mean>0.001</bias_mean>
+                                <bias_stddev>0.0001</bias_stddev>
+                            </noise>
+                        </z>
+                    </linear_acceleration>
+                </imu>
+                <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so">
+                    <ros>
+                        <namespace>/scout</namespace>
+                        <remapping>~/out:=imu</remapping>
+                    </ros>
+                    <frame_name>${prefix}_imu_link</frame_name>
+                </plugin>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+
+    <!-- GPS -->
+    <xacro:macro name="gps_sensor" params="prefix parent *origin">
+        <joint name="${prefix}_gps_joint" type="fixed">
+            <xacro:insert_block name="origin"/>
+            <parent link="${parent}"/>
+            <child link="${prefix}_gps_link"/>
+        </joint>
+
+        <link name="${prefix}_gps_link">
+            <visual>
+                <geometry>
+                    <cylinder radius="0.02" length="0.02"/>
+                </geometry>
+            </visual>
+        </link>
+
+        <gazebo reference="${prefix}_gps_link">
+            <sensor name="${prefix}_gps" type="gps">
+                <always_on>true</always_on>
+                <update_rate>10</update_rate>
+                <gps>
+                    <position_sensing>
+                        <horizontal>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>1.0</stddev>
+                            </noise>
+                        </horizontal>
+                        <vertical>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>1.5</stddev>
+                            </noise>
+                        </vertical>
+                    </position_sensing>
+                    <velocity_sensing>
+                        <horizontal>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.1</stddev>
+                            </noise>
+                        </horizontal>
+                        <vertical>
+                            <noise type="gaussian">
+                                <mean>0.0</mean>
+                                <stddev>0.15</stddev>
+                            </noise>
+                        </vertical>
+                    </velocity_sensing>
+                </gps>
+                <plugin name="gps_plugin" filename="libgazebo_ros_gps_sensor.so">
+                    <ros>
+                        <namespace>/scout</namespace>
+                        <remapping>~/out:=fix</remapping>
+                    </ros>
+                    <frame_name>${prefix}_gps_link</frame_name>
+                </plugin>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+</robot> 
