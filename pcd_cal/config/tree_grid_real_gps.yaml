@@ -1,0 +1,43 @@
+pcd_publisher:
+  ros__parameters:
+    pcd_path: "/root/map/resolution_0/GlobalMap.pcd"
+    tree_pcd_path: "/root/map/tree_pcd/tree_gps.pcd"
+    
+    #clipping point cloud by "z" value
+    clipping_minz: -0.4
+    clipping_maxz: -0.1
+
+    #radius search parameter
+    minNeighborsInRadius: 10
+    clustering_radius: 0.15
+
+    center_search_radius: 1.5
+
+    #clustering tolerance
+    cluster_tolerance: 3.0
+
+    #is vector same
+    cos_theta_threshold: 0.9
+    dot2line_threshold: 1.0
+
+    #size of between distance
+    dist_between_line: 2.0
+    linear_distribution_on_line: 1.5
+
+    #occupance grid resolution
+    grid_resolution: 0.05
+    occupancy_spread: 0.5
+
+    same_length_flag: false
+    
+    yaml_filename: "/root/ros2_ws/src/pcd_cal/maps/map_tree.yaml"
+    map_filename: "/root/ros2_ws/src/pcd_cal/maps/map_tree.pgm"
+
+laser_scan:
+  ros__parameters:
+    clipping_minz: 0.2
+    clipping_maxz: 0.8
+
+    pcd_topic: "/gazebo_ros_laser_controller/out"
+    scan_topic: "/scan"
+    imu_topic: "/imu_hpc/out" # "/odometry/imu"
