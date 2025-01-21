@@ -1,0 +1,22 @@
+Ground:
+  ground_usdc_path: "/meshes/world/unstructured_orchard/ground1.usdc"
+  ground_prim_path: "/World/Ground"
+  ground_position: [0, 0, 0]
+  ground_scale: [1.0, 1.0, 1.0]
+
+Tree:
+  tree1_usdc_path: "/meshes/world/unstructured_orchard/Tree1.usdc"
+  tree2_usdc_path: "/meshes/world/unstructured_orchard/Tree2.usdc"
+  tree3_usdc_path: "/meshes/world/unstructured_orchard/Scrawny_Tree1.usdc"
+  tree4_usdc_path: "/meshes/world/unstructured_orchard/Scrawny_Tree2.usdc"
+
+  x_max: 250          # x축 최대값
+  x_min: -250         # x축 최소값
+  y_max: 150          # y축 최대값
+  y_min: -150         # y축 최소값
+  y_step: 40          # y축 간격
+  x_spacing_range: [10, 15]  # x축 간격 범위 (최소, 최대)
+  x_start_range: [0, 95]  # x축 시작 범위 (최소, 최대), 라인 끝 범위와 같음
+
+  skip_spawn_rate: 20 # % 확률로 트리 생성 스킵
+
