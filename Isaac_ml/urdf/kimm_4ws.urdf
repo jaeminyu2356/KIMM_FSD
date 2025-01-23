@@ -1,0 +1,296 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<robot name="kimm_4ws">
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0.288079610397708 -0.026741 -0.10582" rpy="0.0 -0.0 0.0"/>
+      <mass value="18.1"/>
+      <inertia ixx="0.54726" ixy="-5.6758e-06" ixz="6.11470000001218e-06" iyy="0.62898" iyz="-2.02429999999527e-05" izz="0.13308"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/base_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="0.436519610397708 3.52184519443423e-17 -0.1132" rpy="1.5707963267949003 2.80359486647629e-33 1.5707963267949003"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/base_link.dae"/>
+      </geometry>
+      <origin xyz="0.436519610397708 3.52184519443423e-17 -0.1132" rpy="1.5707963267949003 2.80359486647629e-33 1.5707963267949003"/>
+    </collision>
+  </link>
+  <link name="camera_link">
+    <inertial>
+      <origin xyz="-0.0937169300000213 -0.0192689997354392 0.0769991024556038" rpy="0.0 -0.0 0.0"/>
+      <mass value="0.17032"/>
+      <inertia ixx="3.2574e-05" ixy="-1.38289999999976e-09" ixz="3.2795000012233e-09" iyy="0.00039062" iyz="-6.45249999999732e-08" izz="0.00038294"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/camera_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.0938980000000213 2.64560795165874e-10 0.0770000000056038" rpy="1.5707963267949003 -0.0 1.5707963267949003"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/camera_link.dae"/>
+      </geometry>
+      <origin xyz="-0.0938980000000213 2.64560795165874e-10 0.0770000000056038" rpy="1.5707963267949003 -0.0 1.5707963267949003"/>
+    </collision>
+  </link>
+  <link name="lidar_link">
+    <inertial>
+      <origin xyz="-0.0142109999999998 0.00023869999999995 0.04199937576" rpy="0.0 -0.0 0.0"/>
+      <mass value="0.28115"/>
+      <inertia ixx="0.00015916" ixy="3.23610000000405e-09" ixz="3.42700000000704e-09" iyy="0.00021035" iyz="-1.15719999999983e-06" izz="0.00016118"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/lidar_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.0444999999999998 -1.55370919578519e-16 0.0420000000000001" rpy="1.5707963267949003 -0.0 1.5707963267949003"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/lidar_link.dae"/>
+      </geometry>
+      <origin xyz="-0.0444999999999998 -1.55370919578519e-16 0.0420000000000001" rpy="1.5707963267949003 -0.0 1.5707963267949003"/>
+    </collision>
+  </link>
+  <link name="fl_steering_wheel_link">
+    <inertial>
+      <origin xyz="0.271294959999998 0.125691869537615 -0.170619231352905" rpy="0.0 -0.0 0.0"/>
+      <mass value="0.77924"/>
+      <inertia ixx="0.00080045" ixy="-1.88579999998655e-07" ixz="-9.35380000000004e-06" iyy="0.0013261" iyz="1.37829999973089e-07" izz="0.0011915"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/fl_steering_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="0.270999999999998 0.172459869537615 -0.170610920452895" rpy="-1.5707963267951 1e-15 3.14159265358979"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/fl_steering_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="0.270999999999998 0.172459869537615 -0.170610920452895" rpy="-1.5707963267951 1e-15 3.14159265358979"/>
+    </collision>
+  </link>
+  <link name="fl_wheel_link">
+    <inertial>
+      <origin xyz="0.17926649501632 0.333111000298931 -0.266798200709751" rpy="0.0 -0.0 0.0"/>
+      <mass value="2.9102"/>
+      <inertia ixx="0.0218901792835134" ixy="-1.26627057991482e-09" ixz="0.000243855455524856" iyy="0.011674" iyz="-1.13051975258911e-07" izz="0.0116798207164866"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/fl_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="0.178877516104203 0.333110920452931 -0.266807497708173" rpy="3.14159265358963 -1.54693149782087 -3.14159265358963"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/fl_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="0.178877516104203 0.333110920452931 -0.266807497708173" rpy="3.14159265358963 -1.54693149782087 -3.14159265358963"/>
+    </collision>
+  </link>
+  <link name="fr_steering_wheel_link">
+    <inertial>
+      <origin xyz="-0.271294889999998 0.125691869537615 -0.170619269352905" rpy="0.0 -0.0 0.0"/>
+      <mass value="0.77924"/>
+      <inertia ixx="0.00080045" ixy="1.87519999998655e-07" ixz="9.35270000000004e-06" iyy="0.0013261" iyz="1.35979999973089e-07" izz="0.0011915"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/fr_steering_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.270999999999998 0.172459869537615 -0.170610920452895" rpy="-1.5707963267951 -1e-15 -3.14159265358979"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/fr_steering_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="-0.270999999999998 0.172459869537615 -0.170610920452895" rpy="-1.5707963267951 -1e-15 -3.14159265358979"/>
+    </collision>
+  </link>
+  <link name="fr_wheel_link">
+    <inertial>
+      <origin xyz="-0.179266333631726 0.333110915541231 -0.266798144611828" rpy="0.0 -0.0 0.0"/>
+      <mass value="2.9102"/>
+      <inertia ixx="0.0218901792977362" ixy="1.86646698741416e-09" ixz="-0.000243855157764345" iyy="0.011674" iyz="-1.00424057215067e-07" izz="0.0116798207022638"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/fr_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.178877516104203 0.333110920452931 -0.266807497708173" rpy="3.14159265358963 1.54693149782087 3.14159265358963"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/fr_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="-0.178877516104203 0.333110920452931 -0.266807497708173" rpy="3.14159265358963 1.54693149782087 3.14159265358963"/>
+    </collision>
+  </link>
+  <link name="rl_steering_wheel_link">
+    <inertial>
+      <origin xyz="0.271294899999998 -1.07422786953762 -0.170602571952889" rpy="0.0 -0.0 0.0"/>
+      <mass value="0.77924"/>
+      <inertia ixx="0.00080045" ixy="-1.87509999998655e-07" ixz="9.35270000000004e-06" iyy="0.0013261" iyz="-1.35989999973089e-07" izz="0.0011915"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/rl_steering_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="0.270999999999998 -1.02745986953762 -0.170610920452898" rpy="-1.5707963267947 1e-15 -3.14159265358979"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/rl_steering_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="0.270999999999998 -1.02745986953762 -0.170610920452898" rpy="-1.5707963267947 1e-15 -3.14159265358979"/>
+    </collision>
+  </link>
+  <link name="rl_wheel_link">
+    <inertial>
+      <origin xyz="-1.03324523603187 0.333110916298305 -0.246414358858157" rpy="0.0 -0.0 0.0"/>
+      <mass value="2.9102"/>
+      <inertia ixx="0.0218901792980797" ixy="-1.82290633096874e-09" ixz="-0.000243855150572545" iyy="0.011674" iyz="1.00525125463346e-07" izz="0.0116798207019203"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/rl_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-1.03363405355798 0.333110920453105 -0.246405005702829" rpy="1.67626582042238e-13 -1.54693149782087 -1.67578850118872e-13"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/rl_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="-1.03363405355798 0.333110920453105 -0.246405005702829" rpy="1.67626582042238e-13 -1.54693149782087 -1.67578850118872e-13"/>
+    </collision>
+  </link>
+  <link name="rr_steering_wheel_link">
+    <inertial>
+      <origin xyz="-0.27129495 -1.07422786953761 -0.170602608952908" rpy="0.0 -0.0 0.0"/>
+      <mass value="0.77924"/>
+      <inertia ixx="0.00080045" ixy="1.88519999998655e-07" ixz="-9.35380000000004e-06" iyy="0.0013261" iyz="-1.37879999973089e-07" izz="0.0011915"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/rr_steering_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.271 -1.02745986953761 -0.170610920452917" rpy="-1.5707963267947 -1e-15 3.14159265358979"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/rr_steering_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="-0.271 -1.02745986953761 -0.170610920452917" rpy="-1.5707963267947 -1e-15 3.14159265358979"/>
+    </collision>
+  </link>
+  <link name="rr_wheel_link">
+    <inertial>
+      <origin xyz="1.03324507470876 0.333110993861124 -0.246414305336502" rpy="0.0 -0.0 0.0"/>
+      <mass value="2.9102"/>
+      <inertia ixx="0.0218901792842863" ixy="1.22842608661919e-09" ixz="0.000243855439343305" iyy="0.011674" iyz="1.13322955487575e-07" izz="0.0116798207157137"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/rr_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="1.03363405355797 0.333110920453124 -0.246405005702831" rpy="1.67626582042238e-13 1.54693149782087 1.67578850118872e-13"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/rr_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="1.03363405355797 0.333110920453124 -0.246405005702831" rpy="1.67626582042238e-13 1.54693149782087 1.67578850118872e-13"/>
+    </collision>
+  </link>
+  <joint name="camera_joint" type="fixed">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <axis xyz="0. 0. 0."/>
+    <origin xyz="0.530417610397729 0.0 -0.190200000005604" rpy="0.0 -0.0 0.0"/>
+  </joint>
+  <joint name="lidar_joint" type="fixed">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="base_link"/>
+    <child link="lidar_link"/>
+    <axis xyz="0. 0. 0."/>
+    <origin xyz="0.481019610397708 0.0 -0.1552" rpy="0.0 -0.0 0.0"/>
+  </joint>
+  <joint name="fl_steering_wheel_joint" type="revolute">
+    <limit effort="0.0" velocity="0.0" lower="0.0" upper="0.0"/>
+    <parent link="base_link"/>
+    <child link="fl_steering_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.608979479935289 0.270999999999998 -0.28381092045293" rpy="3.14159265358959 -0.0 -1.5707963267949003"/>
+  </joint>
+  <joint name="fl_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="fl_steering_wheel_link"/>
+    <child link="fl_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.0 0.0 0.1625" rpy="-1.5707963267949003 -0.0 1.54693149782087"/>
+  </joint>
+  <joint name="fr_steering_wheel_joint" type="revolute">
+    <limit effort="0.0" velocity="0.0" lower="0.0" upper="0.0"/>
+    <parent link="base_link"/>
+    <child link="fr_steering_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.608979479935289 -0.270999999999998 -0.28381092045293" rpy="3.14159265358959 -0.0 -1.5707963267949003"/>
+  </joint>
+  <joint name="fr_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="fr_steering_wheel_link"/>
+    <child link="fr_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.0 0.0 0.1625" rpy="-1.5707963267949003 -0.0 -1.54693149782087"/>
+  </joint>
+  <joint name="rl_steering_wheel_joint" type="revolute">
+    <limit effort="0.0" velocity="0.0" lower="0.0" upper="0.0"/>
+    <parent link="base_link"/>
+    <child link="rl_steering_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="-0.590940259139873 0.270999999999998 -0.283810920453104" rpy="-3.14159265358959 -0.0 -1.5707963267949003"/>
+  </joint>
+  <joint name="rl_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="rl_steering_wheel_link"/>
+    <child link="rl_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.0 0.0 0.1625" rpy="-1.5707963267949003 -0.0 1.59466115576892"/>
+  </joint>
+  <joint name="rr_steering_wheel_joint" type="revolute">
+    <limit effort="0.0" velocity="0.0" lower="0.0" upper="0.0"/>
+    <parent link="base_link"/>
+    <child link="rr_steering_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="-0.590940259139867 -0.271 -0.283810920453123" rpy="-3.14159265358959 -0.0 -1.5707963267949003"/>
+  </joint>
+  <joint name="rr_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="rr_steering_wheel_link"/>
+    <child link="rr_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.0 0.0 0.1625" rpy="-1.5707963267949003 -0.0 -1.59466115576892"/>
+  </joint>
+  <material name="">
+    <color rgba="1. 1. 1. 1."/>
+  </material>
+</robot>

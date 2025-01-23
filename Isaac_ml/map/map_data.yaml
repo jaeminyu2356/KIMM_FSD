@@ -1,0 +1,7 @@
+image: /root/ros2_ws/src/Isaac_ml/map/map.png
+mode: trinary
+resolution: 0.05
+origin: [-8.975, -8.475, 0]  # Top Right 좌표를 origin으로 사용
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.25

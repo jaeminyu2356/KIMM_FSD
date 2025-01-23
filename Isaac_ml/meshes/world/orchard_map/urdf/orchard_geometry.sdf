@@ -1,0 +1,64 @@
+<sdf version='1.7'>
+  <model name='orchard_world'>
+    <link name='orchard_world_link'>
+      <inertial>
+        <pose>0 0 0 0 -0 0</pose>
+        <mass>1</mass>
+        <inertia>
+          <ixx>1</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>1</iyy>
+          <iyz>0</iyz>
+          <izz>1</izz>
+        </inertia>
+      </inertial>
+      <collision name='orchard_world_link_collision'>
+        <pose>0 0 0 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file://$(find kimm_orchard_sim)/map/meshes/orchard_world.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <collision name='orchard_world_link_collision_1'>
+        <pose>0 0 0 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file://$(find kimm_orchard_sim)/map/meshes/orchard_trunks.dae</uri>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name='orchard_world_link_visual'>
+        <pose>0 0 0 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file://$(find kimm_orchard_sim)/map/meshes/orchard_world.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='orchard_world_link_visual_1'>
+        <pose>0 0 0 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file://$(find kimm_orchard_sim)/map/meshes/orchard_trunks.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <visual name='orchard_world_link_visual_2'>
+        <pose>0 0 0 0 -0 1.5708</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file://$(find kimm_orchard_sim)/map/meshes/orchard_leaves.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <static>1</static>
+  </model>
+</sdf>

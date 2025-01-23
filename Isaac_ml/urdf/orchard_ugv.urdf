@@ -1,0 +1,405 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<robot name="orchard_ugv" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:property name="M_PI" value="3.14159"/>
+  <link name="base_link">
+    <inertial>
+      <origin xyz="-0.00103249999999674 0.80185 -0.0226099999995382" rpy="0.0 -0.0 0.0"/>
+      <mass value="29.688"/>
+      <inertia ixx="1.0171" ixy="-0.000176890000000225" ixz="-0.00082975" iyy="1.3529" iyz="1.68819999995258e-05" izz="0.52988"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/base_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="3.59244523089111e-15 0.404 -0.517999999999538" rpy="1.5707963267949003 -6.70878395900397e-16 3.87006573320564e-31"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/base_link.dae"/>
+      </geometry>
+      <origin xyz="3.59244523089111e-15 0.404 -0.517999999999538" rpy="1.5707963267949003 -6.70878395900397e-16 3.87006573320564e-31"/>
+    </collision>
+  </link>
+  <link name="fl_steering_wheel_link">
+    <inertial>
+      <origin xyz="-0.526058000000014 0.590980000000006 -0.256156511016553" rpy="0.0 -0.0 0.0"/>
+      <mass value="3.191"/>
+      <inertia ixx="0.015262" ixy="-0.000526319999999995" ixz="0.00111479999999998" iyy="0.013696" iyz="-0.00267290000000002" izz="0.00874190000000001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/fl_steering_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.625000000000014 0.558400000000006 -0.174134511016552" rpy="-1.5707963267949003 -0.0 -1.5707963267949003"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/fl_steering_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="-0.625000000000014 0.558400000000006 -0.174134511016552" rpy="-1.5707963267949003 -0.0 -1.5707963267949003"/>
+    </collision>
+  </link>
+  <link name="fl_wheel_link">
+    <inertial>
+      <origin xyz="-0.620026190674758 0.435790221016555 0.559537900000006" rpy="0.0 -0.0 0.0"/>
+      <mass value="3.7027"/>
+      <inertia ixx="0.078776" ixy="1.51429999892351e-10" ixz="-2.51960001212871e-08" iyy="0.044007" iyz="3.0832e-05" izz="0.044038"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/fl_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.625000290674758 0.435134511016555 0.558400000000006" rpy="3.141592653589793 1.570796326794893 3.141592653589793"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/fl_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="-0.625000290674758 0.435134511016555 0.558400000000006" rpy="3.141592653589793 1.570796326794893 3.141592653589793"/>
+    </collision>
+  </link>
+  <link name="fr_steering_wheel_link">
+    <inertial>
+      <origin xyz="-0.525081999999954 -0.525902999999998 -0.0885394992774863" rpy="0.0 -0.0 0.0"/>
+      <mass value="3.1996"/>
+      <inertia ixx="0.015286" ixy="0.000503480000000013" ixz="-0.00117120000000002" iyy="0.013715" iyz="-0.00267320000000002" izz="0.00874460000000002"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/fr_steering_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.624999999999955 -0.558399999999998 -0.173634499277486" rpy="-1.5707963267949003 -0.0 -1.5707963267949003"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/fr_steering_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="-0.624999999999955 -0.558399999999998 -0.173634499277486" rpy="-1.5707963267949003 -0.0 -1.5707963267949003"/>
+    </collision>
+  </link>
+  <link name="fr_wheel_link">
+    <inertial>
+      <origin xyz="-0.629976300000689 0.435790279276273 -0.557261999999994" rpy="0.0 -0.0 0.0"/>
+      <mass value="3.7023"/>
+      <inertia ixx="0.07877" ixy="-2.54901076493526e-14" ixz="2.51499998787199e-08" iyy="0.044003" iyz="3.0832e-05" izz="0.044034"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/fr_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.625000000000689 0.435134499276273 -0.558399999999994" rpy="3.141592653589793 1.570796326794893 3.141592653589793"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/fr_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="-0.625000000000689 0.435134499276273 -0.558399999999994" rpy="3.141592653589793 1.570796326794893 3.141592653589793"/>
+    </collision>
+  </link>
+  <link name="rl_steering_wheel_link">
+    <inertial>
+      <origin xyz="0.723942000000025 0.590979999999949 -0.256156511016558" rpy="0.0 -0.0 0.0"/>
+      <mass value="3.191"/>
+      <inertia ixx="0.015262" ixy="-0.000526319999999995" ixz="0.00111479999999998" iyy="0.013696" iyz="-0.00267290000000002" izz="0.00874190000000001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/rl_steering_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="0.625000000000025 0.558399999999949 -0.174134511016557" rpy="-1.5707963267949003 -0.0 -1.5707963267949003"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/rl_steering_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="0.625000000000025 0.558399999999949 -0.174134511016557" rpy="-1.5707963267949003 -0.0 -1.5707963267949003"/>
+    </collision>
+  </link>
+  <link name="rl_wheel_link">
+    <inertial>
+      <origin xyz="0.62997380932524 0.435790221016555 0.559537900000004" rpy="0.0 -0.0 0.0"/>
+      <mass value="3.7027"/>
+      <inertia ixx="0.078776" ixy="1.51429999892351e-10" ixz="-2.51960001212871e-08" iyy="0.044007" iyz="3.0832e-05" izz="0.044038"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/rl_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="0.62499970932524 0.435134511016555 0.558400000000004" rpy="3.141592653589793 1.570796326794893 3.141592653589793"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/rl_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="0.62499970932524 0.435134511016555 0.558400000000004" rpy="3.141592653589793 1.570796326794893 3.141592653589793"/>
+    </collision>
+  </link>
+  <link name="rr_steering_wheel_link">
+    <inertial>
+      <origin xyz="0.724918000000045 -0.525903000000002 -0.0885395110155118" rpy="0.0 -0.0 0.0"/>
+      <mass value="3.1996"/>
+      <inertia ixx="0.015286" ixy="0.000503480000000013" ixz="-0.00117120000000002" iyy="0.013715" iyz="-0.00267320000000002" izz="0.00874460000000002"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/rr_steering_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="0.625000000000045 -0.558400000000002 -0.173634511015512" rpy="-1.5707963267949003 -0.0 -1.5707963267949003"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/rr_steering_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="0.625000000000045 -0.558400000000002 -0.173634511015512" rpy="-1.5707963267949003 -0.0 -1.5707963267949003"/>
+    </collision>
+  </link>
+  <link name="rr_wheel_link">
+    <inertial>
+      <origin xyz="0.620023699999314 0.435790291014293 -0.557262000000003" rpy="0.0 -0.0 0.0"/>
+      <mass value="3.7023"/>
+      <inertia ixx="0.07877" ixy="-2.54761076493526e-14" ixz="2.51499998787199e-08" iyy="0.044003" iyz="3.0832e-05" izz="0.044034"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/rr_wheel_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="0.624999999999314 0.435134511014293 -0.558400000000003" rpy="3.141592653589793 1.570796326794893 3.141592653589793"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/rr_wheel_link.dae"/>
+      </geometry>
+      <origin xyz="0.624999999999314 0.435134511014293 -0.558400000000003" rpy="3.141592653589793 1.570796326794893 3.141592653589793"/>
+    </collision>
+  </link>
+  <link name="arm1_link">
+    <inertial>
+      <origin xyz="3.59244523089111e-15 0.404 -0.517999999999538" rpy="0.0 -0.0 0.0"/>
+      <mass value="0.0"/>
+      <inertia ixx="0.0" ixy="0.0" ixz="0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm1_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="3.59244523089111e-15 0.404 -0.517999999999538" rpy="1.5707963267949003 -6.70878395900397e-16 3.87006573320564e-31"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm1_link.dae"/>
+      </geometry>
+      <origin xyz="3.59244523089111e-15 0.404 -0.517999999999538" rpy="1.5707963267949003 -6.70878395900397e-16 3.87006573320564e-31"/>
+    </collision>
+  </link>
+  <link name="arm2_link">
+    <inertial>
+      <origin xyz="-0.343235015894633 -0.589043999999388 0.120999420094225" rpy="0.0 -0.0 0.0"/>
+      <mass value="10.905"/>
+      <inertia ixx="0.123531144775942" ixy="-0.00167187632637416" ixz="0.0147981043711083" iyy="0.12556" iyz="-0.0109653944497318" izz="0.0287598552240577"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm2_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.400497772647027 -0.616999999999388 -0.141580449364795" rpy="3.93709538557874e-15 1.43902809440512 3.90296517976033e-15"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm2_link.dae"/>
+      </geometry>
+      <origin xyz="-0.400497772647027 -0.616999999999388 -0.141580449364795" rpy="3.93709538557874e-15 1.43902809440512 3.90296517976033e-15"/>
+    </collision>
+  </link>
+  <link name="arm3_link">
+    <inertial>
+      <origin xyz="-0.23746464444949 -0.581800538201215 -0.0932612938687763" rpy="0.0 -0.0 0.0"/>
+      <mass value="5.1715"/>
+      <inertia ixx="0.0620232894908731" ixy="0.0027594891181694" ixz="0.00658449065099018" iyy="0.054662" iyz="0.019771837993639" izz="0.0157657105091269"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm3_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.208487038807708 -0.684370538201215 0.159880449364673" rpy="-3.14159265358978 -1.43902809440512 3.14159265358978"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm3_link.dae"/>
+      </geometry>
+      <origin xyz="-0.208487038807708 -0.684370538201215 0.159880449364673" rpy="-3.14159265358978 -1.43902809440512 3.14159265358978"/>
+    </collision>
+  </link>
+  <link name="arm4_link">
+    <inertial>
+      <origin xyz="-0.272687359398989 -0.893175042124194 -0.153736266004766" rpy="0.0 -0.0 0.0"/>
+      <mass value="0.86844"/>
+      <inertia ixx="0.00100159971746297" ixy="-0.000254319066847665" ixz="-4.85414251946025e-06" iyy="0.000885589999999999" iyz="3.64996945019128e-05" izz="0.000982180282537027"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm4_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="-0.318109405184127 -0.902927642124194 -0.159480449364736" rpy="1.1517030239331e-14 1.43902809440512 1.14171904909914e-14"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm4_link.dae"/>
+      </geometry>
+      <origin xyz="-0.318109405184127 -0.902927642124194 -0.159480449364736" rpy="1.1517030239331e-14 1.43902809440512 1.14171904909914e-14"/>
+    </collision>
+  </link>
+  <link name="arm5_link">
+    <inertial>
+      <origin xyz="0.202541583766248 0.24718018200937 -0.987196222269241" rpy="0.0 -0.0 0.0"/>
+      <mass value="0.86844"/>
+      <inertia ixx="0.000983859499110623" ixy="-1.83654467228935e-07" ixz="8.95386689563206e-07" iyy="0.00101420158979828" iyz="0.000253427259349587" izz="0.000871318911091097"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm5_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="0.209830449364735 0.292651048122776 -0.978797276250015" rpy="1.54297911628478 -0.0036862949803813196 -0.131716957803607"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm5_link.dae"/>
+      </geometry>
+      <origin xyz="0.209830449364735 0.292651048122776 -0.978797276250015" rpy="1.54297911628478 -0.0036862949803813196 -0.131716957803607"/>
+    </collision>
+  </link>
+  <link name="arm6_link">
+    <inertial>
+      <origin xyz="0.165663052283443 -1.02932559947292 -0.363435560653319" rpy="0.0 -0.0 0.0"/>
+      <mass value="0.28425"/>
+      <inertia ixx="0.000184030011635817" ixy="-1.94361694308924e-09" ixz="3.17188458993215e-08" iyy="0.000187895522250448" iyz="2.32746985867529e-06" izz="0.000270494466113735"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm6_link.dae"/>
+      </geometry>
+      <material name=""/>
+      <origin xyz="0.165655145892847 -1.02976665535819 -0.385036648519622" rpy="-0.0278158578089435 0.00036695245300989195 -1.02097303261102e-05"/>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://kimm_orchard_sim/meshes/rover_robot/arm6_link.dae"/>
+      </geometry>
+      <origin xyz="0.165655145892847 -1.02976665535819 -0.385036648519622" rpy="-0.0278158578089435 0.00036695245300989195 -1.02097303261102e-05"/>
+    </collision>
+  </link>
+  <joint name="fl_steering_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="base_link"/>
+    <child link="fl_steering_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.5584 -0.221 -0.69213" rpy="3.1415853071795867 -0.0 -1.5708"/>
+  </joint>
+  <joint name="fl_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="fl_steering_wheel_link"/>
+    <child link="fl_wheel_link"/>
+    <axis xyz=" 0.  0. -1."/>
+    <origin xyz="0.0 0.0 0.261" rpy="-1.5708 -0.0 0.0"/>
+  </joint>
+  <joint name="fr_steering_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="base_link"/>
+    <child link="fr_steering_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="-0.5584 -0.221 -0.69163" rpy="3.1415853071795867 -0.0 -1.5708"/>
+  </joint>
+  <joint name="fr_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="fr_steering_wheel_link"/>
+    <child link="fr_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.0 0.0 0.2615" rpy="-1.5708 -0.0 0.0"/>
+  </joint>
+  <joint name="rl_steering_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="base_link"/>
+    <child link="rl_steering_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.5584 1.029 -0.69213" rpy="3.1415853071795867 -0.0 -1.5708"/>
+  </joint>
+  <joint name="rl_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="rl_steering_wheel_link"/>
+    <child link="rl_wheel_link"/>
+    <axis xyz=" 0.  0. -1."/>
+    <origin xyz="0.0 0.0 0.261" rpy="-1.5708 -0.0 0.0"/>
+  </joint>
+  <joint name="rr_steering_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="base_link"/>
+    <child link="rr_steering_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="-0.5584 1.029 -0.69163" rpy="3.1415853071795867 -0.0 -1.5708"/>
+  </joint>
+  <joint name="rr_wheel_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="rr_steering_wheel_link"/>
+    <child link="rr_wheel_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.0 0.0 0.2615" rpy="-1.5708 -0.0 0.0"/>
+  </joint>
+  <joint name="arm1_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="base_link"/>
+    <child link="arm1_link"/>
+    <axis xyz=" 0.  0. -1."/>
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 -0.0 0.0"/>
+  </joint>
+  <joint name="arm2_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="arm1_link"/>
+    <child link="arm2_link"/>
+    <axis xyz=" 0.  0. -1."/>
+    <origin xyz="-0.087733 -0.011628 0.099" rpy="1.5708 -0.0 -1.439"/>
+  </joint>
+  <joint name="arm3_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="arm2_link"/>
+    <child link="arm3_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="-0.60898 0.067371 0.0183" rpy="3.1415853071795867 -0.0 -3.1415853071795867"/>
+  </joint>
+  <joint name="arm4_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="arm3_link"/>
+    <child link="arm4_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="-0.5266 0.21856 0.0004" rpy="-3.1415853071795867 -0.0 -3.1415853071795867"/>
+  </joint>
+  <joint name="arm5_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="arm4_link"/>
+    <child link="arm5_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="0.0018882 0.067274 0.05035" rpy="-1.9127926535897932 1.5707926535897934 -0.36899265358979305"/>
+  </joint>
+  <joint name="arm6_joint" type="continuous">
+    <limit effort="0.0" velocity="0.0"/>
+    <parent link="arm5_link"/>
+    <child link="arm6_link"/>
+    <axis xyz="0. 0. 1."/>
+    <origin xyz="-0.00886342266060644 -0.0667137897194216 0.0503499999999968" rpy="1.5707963267949003 -0.00369650495889594 -0.13208391274984796"/>
+  </joint>
+  <material name="">
+    <color rgba="0.82353 0.82353 0.82353 1.     "/>
+  </material>
+</robot>

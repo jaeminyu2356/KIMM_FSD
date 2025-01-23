@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="drone_frame">
+  <link
+    name="drone_link">
+    <inertial>
+      <origin
+        xyz="0 0 -0.26735"
+        rpy="0 0 0" />
+      <mass
+        value="1.4287" />
+      <inertia
+        ixx="0.018938"
+        ixy="-9.8167E-08"
+        ixz="-1.082E-10"
+        iyy="0.094812"
+        iyz="-2.6297E-07"
+        izz="0.097396" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/drone_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="/root/ros2_ws/src/Isaac_ml/meshes/kimm_4ws/drone_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>
