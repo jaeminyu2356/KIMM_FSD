@@ -19,6 +19,8 @@ REALSENSE_RGB_PRIM_PATH = "/Camera_OmniVision_OV9782_Color"
 
 # Sim Start
 from omni.isaac.core.utils.extensions import enable_extension
+from omni.isaac.nucleus import get_assets_root_path
+enable_extension("omni.isaac.nucleus") 
 enable_extension("omni.isaac.ros2_bridge")
 enable_extension("omni.isaac.core_nodes")
 enable_extension("omni.isaac.sensor")
@@ -45,7 +47,6 @@ from omni.isaac.ros2_bridge import read_camera_info
 from omni.isaac.sensor import Camera, IMUSensor
 from omni.isaac.core_nodes.scripts.utils import set_target_prims
 import omni.syntheticdata._syntheticdata as sd
-from omni.isaac.nucleus import get_assets_root_path
 import omni.replicator.core as rep
 import omni.graph.core as og
 import omni.kit.commands
@@ -72,7 +73,7 @@ class StartSim(Node):
         self.package_name = 'isaac_ml'
         self.package_share_directory = get_package_share_directory(self.package_name)
 
-        self.assets_root_path = get_assets_root_path()
+        # self.assets_root_path = get_assets_root_path()
 
         config_file_path = self.package_share_directory + "/config/isaac_sim_settings.yaml"
         with open(config_file_path, 'r') as file:
@@ -133,20 +134,20 @@ class StartSim(Node):
         self.tf_topic = robot_config["tf_topic"]
 
         # Camera
-        camera_config = config["Camera"]
-        self.camera_usd_path = self.assets_root_path + REALSENSE_USD_PATH
-        self.camera_prim_path = self.robot_prim_path + camera_config["camera_prim_path"]
-        self.camera_optical_prim_path = self.robot_prim_path + camera_config["camera_optical_prim_path"]
-        self.camera_freq = camera_config["camera_freq"]
-        self.camera_topic_name = camera_config["camera_topic_name"]
-        self.camera_frame_id = camera_config["camera_frame_id"]
-        self.queue_size = camera_config["queue_size"]
+        # camera_config = config["Camera"]
+        # self.camera_usd_path = self.assets_root_path + REALSENSE_USD_PATH
+        # self.camera_prim_path = self.robot_prim_path + camera_config["camera_prim_path"]
+        # self.camera_optical_prim_path = self.robot_prim_path + camera_config["camera_optical_prim_path"]
+        # self.camera_freq = camera_config["camera_freq"]
+        # self.camera_topic_name = camera_config["camera_topic_name"]
+        # self.camera_frame_id = camera_config["camera_frame_id"]
+        # self.queue_size = camera_config["queue_size"]
 
-        camera_translation = camera_config["camera_translation"]
-        camera_orientation = camera_config["camera_orientation"]
-        quaternion = rot_utils.euler_angles_to_quats(camera_orientation, degrees=True)
-        camera_rot_matrix = Gf.Matrix3d(Gf.Quatd(quaternion[0], quaternion[1], quaternion[2], quaternion[3]))
-        self.camera_transform = Gf.Matrix4d().SetRotate(Gf.Matrix3d(camera_rot_matrix)).SetTranslateOnly(Gf.Vec3d(*camera_translation))
+        # camera_translation = camera_config["camera_translation"]
+        # camera_orientation = camera_config["camera_orientation"]
+        # quaternion = rot_utils.euler_angles_to_quats(camera_orientation, degrees=True)
+        # camera_rot_matrix = Gf.Matrix3d(Gf.Quatd(quaternion[0], quaternion[1], quaternion[2], quaternion[3]))
+        # self.camera_transform = Gf.Matrix4d().SetRotate(Gf.Matrix3d(camera_rot_matrix)).SetTranslateOnly(Gf.Vec3d(*camera_translation))
 
         # LiDAR
         lidar_config = config["LiDAR"]
