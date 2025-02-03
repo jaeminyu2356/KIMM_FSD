@@ -25,6 +25,7 @@ def generate_launch_description():
     rviz_config_file = LaunchConfiguration('rviz_config_file')  # <-- RViz 설정
 
     lifecycle_nodes = [
+        'map_server',
         'filter_mask_server',
         'costmap_filter_info_server',
         'controller_server',
@@ -68,7 +69,7 @@ def generate_launch_description():
         default_value=os.path.join(
             get_package_share_directory('keepout'),
             'params',
-            'keepout_nav2_params.yaml'
+            'keepout_params.yaml'
         ),
         description='Full path to the merged keepout+nav2 params file'
     )
@@ -98,11 +99,23 @@ def generate_launch_description():
     )
 
     #----------------------------------------------------------------------
-    # 3) Standalone Nodes
+    # 3) Standalone Nodes (use_composition=False)
     #----------------------------------------------------------------------
     load_nodes = GroupAction(
         condition=IfCondition(PythonExpression(['not ', use_composition])),
         actions=[
+            # (1) 실제 전역 맵(OccupancyGrid) 퍼블리시 - map_server 노드
+            Node(
+                package='nav2_map_server',
+                executable='map_server',
+                name='map_server',
+                namespace=namespace,
+                output='screen',
+                parameters=[configured_params],
+                # remappings=[('map', 'map')]  # 필요시 명시적 remap 가능
+            ),
+
+            # (2) 필터 마스크를 퍼블리시하는 filter_mask_server
             Node(
                 package='nav2_map_server',
                 executable='map_server',
@@ -111,6 +124,8 @@ def generate_launch_description():
                 output='screen',
                 parameters=[configured_params]
             ),
+
+            # (3) costmap_filter_info_server
             Node(
                 package='nav2_map_server',
                 executable='costmap_filter_info_server',
@@ -119,6 +134,7 @@ def generate_launch_description():
                 output='screen',
                 parameters=[configured_params]
             ),
+
             Node(
                 package='nav2_controller',
                 executable='controller_server',
@@ -193,7 +209,7 @@ def generate_launch_description():
     )
 
     #----------------------------------------------------------------------
-    # 4) Composable Nodes
+    # 4) Composable Nodes (use_composition=True)
     #----------------------------------------------------------------------
     load_composable_nodes = GroupAction(
         condition=IfCondition(use_composition),
@@ -205,18 +221,31 @@ def generate_launch_description():
             LoadComposableNodes(
                 target_container=container_name_full,
                 composable_node_descriptions=[
+                    # (1) 실제 전역 맵(OccupancyGrid) 퍼블리시 - map_server
+                    ComposableNode(
+                        package='nav2_map_server',
+                        plugin='nav2_map_server::MapServer',
+                        name='map_server',
+                        parameters=[configured_params]
+                        # remappings=[('map', 'map')]  # 필요하면 추가
+                    ),
+
+                    # (2) filter_mask_server
                     ComposableNode(
                         package='nav2_map_server',
                         plugin='nav2_map_server::MapServer',
                         name='filter_mask_server',
                         parameters=[configured_params]
                     ),
+
+                    # (3) costmap_filter_info_server
                     ComposableNode(
                         package='nav2_map_server',
                         plugin='nav2_map_server::CostmapFilterInfoServer',
                         name='costmap_filter_info_server',
                         parameters=[configured_params]
                     ),
+
                     ComposableNode(
                         package='nav2_controller',
                         plugin='nav2_controller::ControllerServer',
@@ -310,13 +339,13 @@ def generate_launch_description():
     ld.add_action(declare_autostart_cmd)
     ld.add_action(declare_use_composition_cmd)
     ld.add_action(declare_container_name_cmd)
-    ld.add_action(declare_rviz_config_cmd)  # <- 새로 추가한 RViz config launch arg
+    ld.add_action(declare_rviz_config_cmd)
 
     # Add group actions
     ld.add_action(load_nodes)
     ld.add_action(load_composable_nodes)
 
-    # Finally, add the RViz node (outside any group condition, so always launched)
+    # Finally, add the RViz node (always launched)
     ld.add_action(rviz_node)
 
     return ld

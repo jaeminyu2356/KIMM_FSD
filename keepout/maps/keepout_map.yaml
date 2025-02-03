@@ -1,7 +1,8 @@
-image: /home/KIMM_FSD/src/keepout/maps/keepout_map.pgm
+image: /root/ros2_ws/src/keepout/maps/projection_noground.pgm
 mode: trinary
 resolution: 0.05
-origin: [-3.2, -3.0, 0]
+# origin: [0.0, 0.0, 0.0]
+origin: [-10.0, -37.5, 0]
 negate: 0
 occupied_thresh: 0.65
 free_thresh: 0.25

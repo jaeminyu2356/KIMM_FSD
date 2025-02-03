@@ -17,7 +17,7 @@ filter_mask_server:
     use_sim_time: true
     frame_id: "map"
     topic_name: "/keepout_filter_mask"
-    yaml_filename: "/home/KIMM_FSD/src/keepout/maps/keepout_map.yaml"
+    yaml_filename: "/root/ros2_ws/src/keepout/maps/keepout_map.yaml"
 
 amcl:
   ros__parameters:
@@ -58,7 +58,8 @@ amcl:
     z_max: 0.05
     z_rand: 0.5
     z_short: 0.05
-    scan_topic: scan
+    scan_topic: /point_cloud
+
 
 bt_navigator:
   ros__parameters:
@@ -206,14 +207,18 @@ controller_server:
 local_costmap:
   local_costmap:
     ros__parameters:
+      rolling_window: true
       update_frequency: 5.0
       publish_frequency: 2.0
       global_frame: odom
       robot_base_frame: base_link
       use_sim_time: True
       rolling_window: true
-      width: 3
-      height: 3
+      width: 20
+      height: 20
+      origin_x: -10.0 # 폭의 절반
+      origin_y: -10.0  # 높이의 절반
+      transform_tolerance: 0.5
       resolution: 0.05
       robot_radius: 0.22
       # 기존 plugins + Keepout Filter Layer 추가
@@ -234,7 +239,7 @@ local_costmap:
         mark_threshold: 0
         observation_sources: scan
         scan:
-          topic: /scan
+          topic: /point_cloud
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -263,8 +268,13 @@ global_costmap:
       update_frequency: 1.0
       publish_frequency: 1.0
       global_frame: map
-      robot_base_frame: base_link
+      robot_base_frame: base_footprint
       use_sim_time: True
+      origin_x: -50.0  # 폭의 절반
+      origin_y: -50.0  # 높이의 절반
+      width: 100
+      height: 100
+      transform_tolerance: 0.5
       robot_radius: 0.22
       resolution: 0.05
       track_unknown_space: true
@@ -280,7 +290,7 @@ global_costmap:
         enabled: True
         observation_sources: scan
         scan:
-          topic: /scan
+          topic: /point_cloud
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -308,7 +318,7 @@ global_costmap:
 map_server:
   ros__parameters:
     use_sim_time: True
-    yaml_filename: ""
+    yaml_filename: "/root/ros2_ws/src/keepout/maps/keepout_map.yaml"
 
 map_saver:
   ros__parameters:
@@ -356,7 +366,7 @@ behavior_server:
     assisted_teleop:
       plugin: "nav2_behaviors/AssistedTeleop"
     global_frame: odom
-    robot_base_frame: base_link
+    robot_base_frame: base_footprint
     transform_tolerance: 0.1
     use_sim_time: true
     simulate_ahead_time: 2.0
