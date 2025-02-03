@@ -12,7 +12,7 @@
 class PCDPublisher : public rclcpp::Node {
 public:
   PCDPublisher() : Node("pcd_publisher") {
-    this->declare_parameter<std::string>("pcd_path", "/root/map/GlobalMap.pcd");
+    this->declare_parameter<std::string>("pcd_path", "/root/LOAM/GlobalMap.pcd");
     pcd_path = this->get_parameter("pcd_path").as_string();
     RCLCPP_INFO(this->get_logger(), "pcd_path: %s", pcd_path.c_str());
 
