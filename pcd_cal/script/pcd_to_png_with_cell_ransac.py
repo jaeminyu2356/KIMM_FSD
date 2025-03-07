@@ -3,6 +3,8 @@ import open3d as o3d
 import numpy as np
 from PIL import Image
 import math
+import os
+import yaml
 
 def create_dem_with_ransac(
     points, cell_size,
@@ -159,11 +161,176 @@ def trim_cluster_top(points_cluster, z_step=0.2, expand_threshold=2.0):
         return points_cluster[keep_mask]
 
 
+def create_dem_multi_resolution(
+    points,
+    cell_sizes,           # 큰 크기부터 작은 순서로 [4.0, 2.0, 1.0, 0.5] 등
+    min_x, max_x, min_y, max_y,
+    ransac_dist=0.5,      
+    ransac_n=3,           
+    num_iterations=50,    
+    inlier_min_count=5,   
+    use_median=True       
+):
+    """
+    멀티 레벨 DEM 생성. 큰 셀부터 시작해서 점진적으로 작은 셀로 진행.
+    각 레벨에서 바닥으로 판정된 점들은 다음 레벨에서 제외됨.
+    """
+    remaining_points = points.copy()
+    ground_points = []
+    
+    for cell_size in cell_sizes:
+        if len(remaining_points) < ransac_n:
+            break
+            
+        # 현재 레벨의 DEM 생성
+        width = int(math.ceil((max_x - min_x) / cell_size))
+        height = int(math.ceil((max_y - min_y) / cell_size))
+        dem = np.full((height, width), np.inf, dtype=np.float32)
+        cell_point_indices = [[] for _ in range(height * width)]
+
+        # 포인트를 셀에 분배
+        for i, (x, y, z) in enumerate(remaining_points):
+            cx = int((x - min_x) / cell_size)
+            cy = int((y - min_y) / cell_size)
+            if 0 <= cx < width and 0 <= cy < height:
+                idx = cy * width + cx
+                cell_point_indices[idx].append(i)
+
+        # 셀별 RANSAC
+        current_level_ground = []
+        remaining_indices = []
+        
+        for cy in range(height):
+            for cx in range(width):
+                idx = cy * width + cx
+                if len(cell_point_indices[idx]) < ransac_n:
+                    # 포인트가 부족한 셀의 점들은 다음 레벨로
+                    remaining_indices.extend(cell_point_indices[idx])
+                    continue
+
+                cell_pts_idx = cell_point_indices[idx]
+                cell_pts = remaining_points[cell_pts_idx]
+
+                pcd_temp = o3d.geometry.PointCloud()
+                pcd_temp.points = o3d.utility.Vector3dVector(cell_pts)
+
+                # RANSAC으로 평면 검출
+                plane_model, inliers = pcd_temp.segment_plane(
+                    distance_threshold=ransac_dist,
+                    ransac_n=ransac_n,
+                    num_iterations=num_iterations
+                )
+
+                if len(inliers) >= inlier_min_count:
+                    # 평면이 검출된 경우
+                    inlier_pts = cell_pts[inliers]
+                    outlier_indices = [cell_pts_idx[i] for i in range(len(cell_pts)) if i not in inliers]
+                    
+                    # 법선 벡터가 수직에 가까운지 확인 (바닥 평면 검증)
+                    normal = plane_model[:3]
+                    angle = np.arccos(np.abs(np.dot(normal, [0, 0, 1])))
+                    if angle < np.pi/6:  # 30도 이내
+                        if use_median:
+                            ground_z = np.median(inlier_pts[:, 2])
+                        else:
+                            ground_z = np.min(inlier_pts[:, 2])
+                        dem[cy, cx] = ground_z
+                        
+                        # 바닥으로 판정된 점들 저장
+                        current_level_ground.extend(inlier_pts)
+                        # 나머지 점들은 다음 레벨로
+                        remaining_indices.extend(outlier_indices)
+                    else:
+                        # 수직 평면이면 모든 점을 다음 레벨로
+                        remaining_indices.extend(cell_pts_idx)
+                else:
+                    # 평면이 검출되지 않은 경우, 모든 점을 다음 레벨로
+                    remaining_indices.extend(cell_pts_idx)
+
+        # 이번 레벨에서 찾은 바닥 점들 저장
+        if current_level_ground:
+            ground_points.extend(current_level_ground)
+            
+        # 다음 레벨로 전달할 점들 업데이트
+        if remaining_indices:
+            remaining_points = remaining_points[remaining_indices]
+        else:
+            break
+
+    return np.array(ground_points), remaining_points
+
+
+def clean_binary_image_with_dbscan(
+    binary_img,
+    eps=3,              # DBSCAN 거리 파라미터 (픽셀 단위)
+    min_samples=5,      # 최소 이웃 개수
+    min_cluster_size=20 # 최소 클러스터 크기
+):
+    """
+    2D 이미지에서 DBSCAN으로 노이즈(밀도가 낮은 픽셀) 제거
+    - binary_img: 장애물=0(검은색), 빈공간=255(흰색)인 이미지
+    """
+    # 장애물 픽셀(0)의 좌표 추출
+    obstacle_points = np.column_stack(np.where(binary_img == 0))
+    
+    if len(obstacle_points) == 0:
+        return binary_img
+
+    # DBSCAN 적용
+    from sklearn.cluster import DBSCAN
+    clustering = DBSCAN(eps=eps, min_samples=min_samples).fit(obstacle_points)
+    labels = clustering.labels_
+
+    # 클러스터별 크기 계산
+    unique_labels = set(labels)
+    cluster_sizes = {label: np.sum(labels == label) for label in unique_labels}
+
+    # 결과 이미지 생성 (모두 빈공간으로 초기화)
+    cleaned_img = np.full_like(binary_img, 255)
+
+    # 충분히 큰 클러스터의 픽셀만 장애물로 표시
+    for label in unique_labels:
+        if label == -1:  # 노이즈
+            continue
+        if cluster_sizes[label] >= min_cluster_size:
+            cluster_mask = (labels == label)
+            points = obstacle_points[cluster_mask]
+            cleaned_img[points[:, 0], points[:, 1]] = 0
+
+    return cleaned_img
+
+
+def save_map_yaml(png_path, resolution, width, height):
+    """
+    지도 메타데이터를 YAML 파일로 저장
+    - origin: 지도 원점의 실제 좌표 (좌하단 기준)
+    """
+    yaml_path = png_path.rsplit('.', 1)[0] + '.yaml'
+    
+    # cpp 파일과 동일한 방식으로 origin 계산
+    origin_x = -resolution * width / 2
+    origin_y = -resolution * height / 2
+    
+    yaml_content = {
+        'image': os.path.basename(png_path),
+        'resolution': resolution,
+        'origin': [origin_x, origin_y, 0.0],
+        'occupied_thresh': 0.5,
+        'free_thresh': 0.2,
+        'negate': 0
+    }
+    
+    with open(yaml_path, 'w') as f:
+        yaml.dump(yaml_content, f, default_flow_style=False)
+    
+    print(f"[INFO] Saved {yaml_path}")
+
+
 def pcd_to_binary_png_dem_and_trim(
     pcd_path,
     png_path,
     # DEM 생성 파라미터
-    dem_resolution=1.0,
+    cell_sizes=[4.0, 2.0, 1.0, 0.5],  # 멀티 레벨 DEM 셀 크기
     ransac_dist=0.5,
     ransac_n=3,
     num_iterations=50,
@@ -183,16 +350,15 @@ def pcd_to_binary_png_dem_and_trim(
     expand_threshold=2.0,
 
     # 최종 2D PNG 해상도
-    png_resolution=0.1
+    png_resolution=0.1,
+
+    # 2D 이미지 클리닝 파라미터
+    clean_eps=3,           # DBSCAN 거리 (픽셀)
+    clean_min_samples=5,   # 최소 이웃 개수
+    clean_min_size=20,     # 최소 클러스터 크기
 ):
     """
-    1) PCD 로드
-    2) RANSAC 기반 DEM 생성
-    3) 바닥 제거(바닥 + ground_remove_thresh 이하 전부 제거)
-    4) DBSCAN으로 클러스터링, 각 클러스터 상부 제거
-    5) 2D 투영(PNG) 저장 (장애물=0, 빈공간=255)
-
-    => 결과적으로 '바닥보다 일정 높이 이상'인 물체(장애물)들만 남기게 됨.
+    멀티 레벨 DEM을 사용하도록 수정된 메인 함수
     """
     # 1) PCD 로드
     pcd = o3d.io.read_point_cloud(pcd_path)
@@ -204,10 +370,10 @@ def pcd_to_binary_png_dem_and_trim(
     min_x, min_y, min_z = np.min(all_points, axis=0)
     max_x, max_y, max_z = np.max(all_points, axis=0)
 
-    # 2) DEM 생성 (RANSAC)
-    dem, dem_min_x, dem_min_y, dem_w, dem_h = create_dem_with_ransac(
+    # 2) 멀티 레벨 DEM 처리
+    ground_points, non_ground_points = create_dem_multi_resolution(
         points=all_points,
-        cell_size=dem_resolution,
+        cell_sizes=cell_sizes,
         min_x=min_x,
         max_x=max_x,
         min_y=min_y,
@@ -219,17 +385,20 @@ def pcd_to_binary_png_dem_and_trim(
         use_median=use_median
     )
 
+    if len(non_ground_points) == 0:
+        raise ValueError("바닥 제거 후 남은 점이 없습니다. 파라미터를 조정해보세요.")
+
     # 3) 바닥 제거
     keep_indices = filter_points_remove_ground(
-        points=all_points,
-        dem=dem,
-        dem_min_x=dem_min_x,
-        dem_min_y=dem_min_y,
-        cell_size=dem_resolution,
+        points=non_ground_points,
+        dem=ground_points,
+        dem_min_x=min_x,
+        dem_min_y=min_y,
+        cell_size=cell_sizes[0],
         height_thresh=ground_remove_thresh,
         unknown_cell_keep=unknown_cell_keep
     )
-    filtered_points = all_points[keep_indices]
+    filtered_points = non_ground_points[keep_indices]
     if len(filtered_points) == 0:
         raise ValueError("바닥 제거 후 남은 점이 없습니다. 파라미터를 조정해보세요.")
 
@@ -268,6 +437,7 @@ def pcd_to_binary_png_dem_and_trim(
     if width <= 0 or height <= 0:
         raise ValueError("포인트 범위가 이상하거나 png_resolution이 너무 큽니다.")
 
+    # 초기 2D 투영
     img = np.full((height, width), 255, dtype=np.uint8)
     for (x, y, z) in final_points:
         px = int((x - min_x2) / png_resolution)
@@ -276,8 +446,19 @@ def pcd_to_binary_png_dem_and_trim(
         if 0 <= px < width and 0 <= py_img < height:
             img[py_img, px] = 0
 
-    Image.fromarray(img).save(png_path)
+    # DBSCAN으로 2D 이미지 클리닝
+    cleaned_img = clean_binary_image_with_dbscan(
+        img,
+        eps=clean_eps,
+        min_samples=clean_min_samples,
+        min_cluster_size=clean_min_size
+    )
+
+    Image.fromarray(cleaned_img).save(png_path)
     print(f"[INFO] Saved {png_path} (size: {width}x{height}), final_points={len(final_points)}")
+    
+    # YAML 파일 생성
+    save_map_yaml(png_path, png_resolution, width, height)
 
 
 if __name__ == "__main__":
@@ -290,7 +471,7 @@ if __name__ == "__main__":
         png_file,
 
         # DEM 생성 관련
-        dem_resolution=0.2,       # 셀 크기 (m)
+        cell_sizes=[4.0, 2.0, 1.0, 0.5],  # 멀티 레벨 DEM 셀 크기
         ransac_dist=0.1,          # RANSAC 거리 임계값
         ransac_n=3,
         num_iterations=50,
@@ -308,6 +489,11 @@ if __name__ == "__main__":
         # 상부 제거
         z_step=0.2,
         expand_threshold=4.0,
+
+        # 2D 이미지 클리닝
+        clean_eps=3,           # DBSCAN 거리 (픽셀)
+        clean_min_samples=5,   # 최소 이웃 개수
+        clean_min_size=20,     # 최소 클러스터 크기
 
         # 최종 PNG 해상도
         png_resolution=0.035
