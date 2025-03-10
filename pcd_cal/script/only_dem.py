@@ -326,34 +326,20 @@ def save_map_yaml(png_path, resolution, width, height):
     print(f"[INFO] Saved {yaml_path}")
 
 
-def pcd_to_binary_png_dem_and_trim(
+def pcd_to_binary_png_dem_only(
     pcd_path,
     png_path,
     # DEM 생성 파라미터
-    cell_sizes=[4.0, 2.0, 1.0],  # 레벨 수를 줄이고
-    ransac_dist=0.3,             # 평면 검출 기준을 더 엄격하게
-    ransac_n=5,                  # 샘플 수 증가
+    cell_sizes=[4.0, 2.0, 1.0],  
+    ransac_dist=0.3,             
+    ransac_n=5,                  
     num_iterations=30,
-    inlier_min_count=10,         # 인라이어 기준 증가
+    inlier_min_count=10,         
     use_median=True,
-
-    # 바닥 제거
-    ground_remove_thresh=0.3,    # 바닥 위 30cm까지는 남기기
-    unknown_cell_keep=True,      # 바닥을 못찾은 영역의 포인트는 유지
-
-    # DBSCAN
-    dbscan_eps=0.5,             # 클러스터링 기준 거리 감소
-    dbscan_min_points=15,       # 최소 포인트 수 감소
-
-    # 상부 제거
-    z_step=0.2,
-    expand_threshold=2.0,        # 상부 제거 기준도 엄격하게
-
-    # PNG 해상도
-    png_resolution=0.05          # 해상도를 더 높게
+    png_resolution=0.05
 ):
     """
-    멀티 레벨 DEM을 사용하도록 수정된 메인 함수
+    DEM만 사용하여 2D 이미지 생성
     """
     print(f"[INFO] Loading point cloud from {pcd_path}...")
     # 1) PCD 로드
@@ -388,124 +374,46 @@ def pcd_to_binary_png_dem_and_trim(
     if len(non_ground_points) == 0:
         raise ValueError("바닥 제거 후 남은 점이 없습니다. 파라미터를 조정해보세요.")
 
-    # 3) 바닥 제거
-    print("[INFO] Filtering ground points...")
-    keep_indices = filter_points_remove_ground(
-        points=non_ground_points,
-        dem=ground_points,
-        dem_min_x=min_x,
-        dem_min_y=min_y,
-        cell_size=cell_sizes[0],
-        height_thresh=ground_remove_thresh,
-        unknown_cell_keep=unknown_cell_keep
-    )
-    filtered_points = non_ground_points[keep_indices]
-    print(f"[INFO] Points after ground filtering: {len(filtered_points)}")
-    
-    if len(filtered_points) == 0:
-        raise ValueError("바닥 제거 후 남은 점이 없습니다. 파라미터를 조정해보세요.")
-
-    # 4) DBSCAN + 상부 제거
-    print("[INFO] Running DBSCAN clustering...")
-    labels = cluster_dbscan(filtered_points, eps=dbscan_eps, min_points=dbscan_min_points)
-    unique_labels = set(labels)
-    n_clusters = len(unique_labels) - (1 if -1 in unique_labels else 0)
-    print(f"[INFO] Found {n_clusters} clusters")
-    
-    print("[INFO] Trimming cluster tops...")
-    trunk_points_list = []
-
-    for lbl in unique_labels:
-        if lbl == -1:
-            continue
-        cluster_mask = (labels == lbl)
-        cluster_pts = filtered_points[cluster_mask]
-        print(f"[INFO] Processing cluster {lbl}: {len(cluster_pts)} points")
-        trimmed_cluster = trim_cluster_top(
-            cluster_pts,
-            z_step=z_step,
-            expand_threshold=expand_threshold
-        )
-        trunk_points_list.append(trimmed_cluster)
-
-    if len(trunk_points_list) == 0:
-        raise ValueError("클러스터링 후 남은 점이 없습니다. 파라미터를 조정해보세요.")
-
-    final_points = np.concatenate(trunk_points_list, axis=0)
-    print(f"[INFO] Points after top trimming: {len(final_points)}")
-    
-    if final_points.size == 0:
-        raise ValueError("상부 제거 후 남은 점이 없습니다. 파라미터를 조정해보세요.")
-
-    # 5) 2D 투영 → PNG
+    # 3) 2D 투영 → PNG (non_ground_points만 사용)
     print("[INFO] Creating 2D projection...")
-    min_x2, min_y2, _ = np.min(final_points, axis=0)
-    max_x2, max_y2, _ = np.max(final_points, axis=0)
-
-    width = int(math.ceil((max_x2 - min_x2) / png_resolution))
-    height = int(math.ceil((max_y2 - min_y2) / png_resolution))
+    width = int(math.ceil((max_x - min_x) / png_resolution))
+    height = int(math.ceil((max_y - min_y) / png_resolution))
     print(f"[INFO] Image dimensions: {width}x{height} pixels")
 
     if width <= 0 or height <= 0:
         raise ValueError("포인트 범위가 이상하거나 png_resolution이 너무 큽니다.")
 
     # 초기 2D 투영
-    print("[INFO] Creating initial binary image...")
+    print("[INFO] Creating binary image...")
     img = np.full((height, width), 255, dtype=np.uint8)
-    for (x, y, z) in final_points:
-        px = int((x - min_x2) / png_resolution)
-        py = int((y - min_y2) / png_resolution)
+    for (x, y, z) in non_ground_points:
+        px = int((x - min_x) / png_resolution)
+        py = int((y - min_y) / png_resolution)
         py_img = height - py - 1  # y축 상하 반전
         if 0 <= px < width and 0 <= py_img < height:
             img[py_img, px] = 0
 
-    # # DBSCAN으로 2D 이미지 클리닝
-    # print("[INFO] Cleaning 2D image with DBSCAN...")
-    # cleaned_img = clean_binary_image_with_dbscan(
-    #     img,
-    #     eps=clean_eps,
-    #     min_samples=clean_min_samples,
-    #     min_cluster_size=clean_min_size
-    # )
-
-    # print(f"[INFO] Saving final image to {png_path}...")
-    # Image.fromarray(cleaned_img).save(png_path)
-    # print(f"[INFO] Saved {png_path} (size: {width}x{height}), final_points={len(final_points)}")
+    print(f"[INFO] Saving image to {png_path}...")
+    Image.fromarray(img).save(png_path)
+    print(f"[INFO] Saved {png_path} (size: {width}x{height})")
     
-    # # YAML 파일 생성
-    # save_map_yaml(png_path, png_resolution, width, height)
-    # print("[INFO] Process completed successfully!")
+    # YAML 파일 생성
+    save_map_yaml(png_path, png_resolution, width, height)
+    print("[INFO] Process completed successfully!")
 
 
 if __name__ == "__main__":
-    # 예시 파라미터
     pcd_file = "/root/LOAM/GlobalMap.pcd"
     png_file = "/root/LOAM/above_ground.png"
 
-    pcd_to_binary_png_dem_and_trim(
+    pcd_to_binary_png_dem_only(
         pcd_file,
         png_file,
-
-        # DEM 생성 파라미터
-        cell_sizes=[4.0, 2.0, 1.0],  # 레벨 수를 줄이고
-        ransac_dist=0.3,             # 평면 검출 기준을 더 엄격하게
-        ransac_n=5,                  # 샘플 수 증가
+        cell_sizes=[4.0, 2.0, 1.0],
+        ransac_dist=0.3,
+        ransac_n=5,
         num_iterations=30,
-        inlier_min_count=10,         # 인라이어 기준 증가
+        inlier_min_count=10,
         use_median=True,
-
-        # 바닥 제거
-        ground_remove_thresh=0.3,    # 바닥 위 30cm까지는 남기기
-        unknown_cell_keep=True,      # 바닥을 못찾은 영역의 포인트는 유지
-
-        # DBSCAN
-        dbscan_eps=0.5,             # 클러스터링 기준 거리 감소
-        dbscan_min_points=15,       # 최소 포인트 수 감소
-
-        # 상부 제거
-        z_step=0.2,
-        expand_threshold=2.0,        # 상부 제거 기준도 엄격하게
-
-        # PNG 해상도
-        png_resolution=0.05          # 해상도를 더 높게
+        png_resolution=0.05
     )
